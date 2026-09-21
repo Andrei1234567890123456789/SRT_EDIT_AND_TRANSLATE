@@ -3,7 +3,7 @@
 // ============================================================
 
 // Paste your OpenAI API key here:
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 // Model used for subtitle correction.
 // You can change this later if you want.
