@@ -575,40 +575,28 @@ async function requestTranslation(
             language
         );
 
-    const response =
-        await fetch(
-            "https://api.openai.com/v1/responses",
-            {
-                method: "POST",
+    const response = await fetch(
+    "https://str-studio-api-key-worker.andrei-d-dukat.workers.dev",
+    {
+        method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json",
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-                    "Authorization":
-                        `Bearer ${window.OPENAI_API_KEY}`
-                },
+        body: JSON.stringify({
 
-                body: JSON.stringify({
+            model: "gpt-5.6-luna",
 
-                    model:
-                        window.OPENAI_MODEL,
+            input: prompt,
 
-                    input:
-                        prompt,
+            text: {
+                format: {
+                    type: "json_schema",
+                    name: "subtitle_translations",
+                    strict: true,
 
-                    text: {
-                        format: {
-                            type:
-                                "json_schema",
-
-                            name:
-                                "subtitle_translations",
-
-                            strict:
-                                true,
-
-                            schema: {
+                    schema: {
 
                                 type:
                                     "object",
@@ -658,11 +646,11 @@ async function requestTranslation(
                                 additionalProperties:
                                     false
                             }
-                        }
-                    }
-                })
+                }
             }
-        );
+        })
+    }
+);
 
     const rawResponse =
         await response.text();

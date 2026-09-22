@@ -2,15 +2,12 @@
 // AI SUBTITLE ANALYSIS
 // ============================================================
 
-// Paste your OpenAI API key here:
-const OPENAI_API_KEY = "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";
+// const OPENAI_API_KEY = "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";
 
-// Model used for subtitle correction.
-// You can change this later if you want.
 const OPENAI_MODEL = "gpt-5.6-luna";
 
-window.OPENAI_API_KEY = OPENAI_API_KEY;
-window.OPENAI_MODEL = OPENAI_MODEL;
+// window.OPENAI_API_KEY = OPENAI_API_KEY;
+// window.OPENAI_MODEL = OPENAI_MODEL;
 
 
 // ------------------------------------------------------------
@@ -19,13 +16,13 @@ window.OPENAI_MODEL = OPENAI_MODEL;
 
 async function analyzeSubtitlesWithAI(subtitles) {
 
-    if (!OPENAI_API_KEY ||
-        OPENAI_API_KEY === "PASTE_YOUR_OPENAI_API_KEY_HERE") {
+    // if (!OPENAI_API_KEY ||
+    //     OPENAI_API_KEY === "PASTE_YOUR_OPENAI_API_KEY_HERE") {
 
-        throw new Error(
-            "OpenAI API key has not been entered in ai.js."
-        );
-    }
+    //     throw new Error(
+    //         "OpenAI API key has not been entered in ai.js."
+    //     );
+    // }
 
 
     const lines = subtitles.map(subtitle => {
@@ -197,104 +194,103 @@ SUBTITLES:
 ${lines.join("\n")}
 `;
 
-    const response = await fetch(
-        "https://api.openai.com/v1/responses",
-        {
-            method: "POST",
+const response = await fetch(
+    "https://str-studio-api-key-worker.andrei-d-dukat.workers.dev",
+    {
+        method: "POST",
 
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${OPENAI_API_KEY}`
-            },
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-            body: JSON.stringify({
-                model: OPENAI_MODEL,
+        body: JSON.stringify({
+            model: OPENAI_MODEL,
 
-                input: prompt,
+            input: prompt,
 
-                text: {
-                    format: {
-                        type: "json_schema",
-                        name: "subtitle_corrections",
-                        strict: true,
+            text: {
+                format: {
+                    type: "json_schema",
+                    name: "subtitle_corrections",
+                    strict: true,
 
-                        schema: {
-                            type: "object",
+                    schema: {
+                        type: "object",
 
-                            properties: {
-                                corrections: {
-                                    type: "array",
+                        properties: {
+                            corrections: {
+                                type: "array",
 
-                                    items: {
-                                        type: "object",
+                                items: {
+                                    type: "object",
 
-                                        properties: {
-                                            line: {
-                                                type: "integer"
-                                            },
-
-                                            correctedText: {
-                                                type: "string"
-                                            },
-
-                                            issues: {
-                                                type: "array",
-
-                                                items: {
-                                                    type: "object",
-
-                                                    properties: {
-                                                        type: {
-                                                            type: "string",
-                                                            enum: [
-                                                                "spelling",
-                                                                "punctuation",
-                                                                "audio"
-                                                            ]
-                                                        },
-
-                                                        original: {
-                                                            type: "string"
-                                                        },
-
-                                                        corrected: {
-                                                            type: "string"
-                                                        }
-                                                    },
-
-                                                    required: [
-                                                        "type",
-                                                        "original",
-                                                        "corrected"
-                                                    ],
-
-                                                    additionalProperties: false
-                                                }
-                                            }
+                                    properties: {
+                                        line: {
+                                            type: "integer"
                                         },
 
-                                        required: [
-                                            "line",
-                                            "correctedText",
-                                            "issues"
-                                        ],
+                                        correctedText: {
+                                            type: "string"
+                                        },
 
-                                        additionalProperties: false
-                                    }
+                                        issues: {
+                                            type: "array",
+
+                                            items: {
+                                                type: "object",
+
+                                                properties: {
+                                                    type: {
+                                                        type: "string",
+                                                        enum: [
+                                                            "spelling",
+                                                            "punctuation",
+                                                            "audio"
+                                                        ]
+                                                    },
+
+                                                    original: {
+                                                        type: "string"
+                                                    },
+
+                                                    corrected: {
+                                                        type: "string"
+                                                    }
+                                                },
+
+                                                required: [
+                                                    "type",
+                                                    "original",
+                                                    "corrected"
+                                                ],
+
+                                                additionalProperties: false
+                                            }
+                                        }
+                                    },
+
+                                    required: [
+                                        "line",
+                                        "correctedText",
+                                        "issues"
+                                    ],
+
+                                    additionalProperties: false
                                 }
-                            },
+                            }
+                        },
 
-                            required: [
-                                "corrections"
-                            ],
+                        required: [
+                            "corrections"
+                        ],
 
-                            additionalProperties: false
-                        }
+                        additionalProperties: false
                     }
                 }
-            })
-        }
-    );
+            }
+        })
+    }
+);
 
     const rawResponse = await response.text();
 
