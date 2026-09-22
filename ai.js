@@ -2,7 +2,6 @@
 // AI SUBTITLE ANALYSIS
 // ============================================================
 
-// const OPENAI_API_KEY = "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";
 
 const OPENAI_MODEL = "gpt-5.6-luna";
 
